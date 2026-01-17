@@ -1,29 +1,49 @@
 package vn.hoidanit.laptopshop.controller;
 
+import java.util.List;
+
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 import vn.hoidanit.laptopshop.service.UserService;
+import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.repository.UserRepository;
 
 @Controller
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    @RequestMapping("/admin/user")
+    public String getUserPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return "admin/user/create";
+    }
+
     @RequestMapping("/")
     public String getHomePage(Model model) {
-        String test = this.userService.handleHelllo();
-        model.addAttribute("eric", test);
+        List<User> arrUser = this.userService.getAllUsersByEmail("1@gmai.com");
+        System.out.println(arrUser);
+        model.addAttribute("eric", "test");
         model.addAttribute("duy", "minh duy dep trai");
         return "hello";
     }
+
+    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
+    public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit) {
+        System.out.println("run here: " + hoidanit);
+        this.userService.handleSaveUser(hoidanit);
+        return "hello";
+    }
+
 }
 
 // @RestController
