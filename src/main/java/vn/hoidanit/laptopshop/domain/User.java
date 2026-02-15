@@ -33,7 +33,7 @@ public class User {
     private String avatar;
 
     // roleId
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_id")
     private Role role;
 
@@ -55,6 +55,22 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public void setId(long id) {
